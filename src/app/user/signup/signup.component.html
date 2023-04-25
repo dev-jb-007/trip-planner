@@ -1,0 +1,15 @@
+
+<div class="mt-4">
+    <form [formGroup]="form" class="max-w-md mx-auto">
+        <h1 class="text-4xl text-center">Signup</h1>
+        <input type="text" formControlName="name" name="name" placeholder="Name">
+        <input type="text" formControlName="email" name="email" placeholder="your@email.com">
+        <input type="password" formControlName="password" name="password" placeholder="password">
+        <div class="flex flex-row justify-evenly mx-auto">
+            <button *ngIf="!loading" class="mx-auto" mat-raised-button color="primary" (click)="signUp()">Sign Up</button>
+            <mat-spinner *ngIf="loading" diameter="40"></mat-spinner>
+            <button class="mx-auto" mat-raised-button color="primary" routerLink="../login">Login</button>
+        </div>
+        
+    </form>
+</div>
