@@ -8,7 +8,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CookieService } from 'ngx-cookie-service';
 import { TestComponent } from './test/test.component';
-import { GoogleLoginProvider, SocialLoginModule } from 'angularx-social-login';
 // import { MatButtonModule } from '@angular/material/button'
 
 @NgModule({

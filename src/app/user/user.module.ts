@@ -5,20 +5,24 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { UserRoutingModule } from './user-routing.module';
 import { UserComponent } from './user.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { SignupComponent } from './signup/signup.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import{ MatDialogModule } from '@angular/material/dialog';
 import { EmailVerificationComponent } from './email-verification/email-verification.component';  
-import { GoogleLoginProvider, SocialLoginModule } from 'angularx-social-login';
+import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import {
+  GoogleLoginProvider,
+} from '@abacritt/angularx-social-login';
+import { GoogleSigninButtDirective } from '../directives/google.directive';
 
 @NgModule({
   declarations: [
     LoginComponent,
     UserComponent,
     SignupComponent,
-    EmailVerificationComponent
+    EmailVerificationComponent,
+    GoogleSigninButtDirective
   ],
   imports: [
     CommonModule,
@@ -28,23 +32,30 @@ import { GoogleLoginProvider, SocialLoginModule } from 'angularx-social-login';
     MatProgressSpinnerModule,
     MatDialogModule,
     MatSnackBarModule,
-    SocialLoginModule
+    SocialLoginModule,
   ],
   exports:[
     LoginComponent,
     UserComponent
   ],
-  providers:[{
-    provide: 'SocialAuthServiceConfig',
-    useValue: {
-      autoLogin: true, //keeps the user signed in
-      providers: [
-        {
-          id: GoogleLoginProvider.PROVIDER_ID,
-          provider: new GoogleLoginProvider('763885809251-p2iru0nrpe5nj6e5gikbmugni649gv0k.apps.googleusercontent.com') // your client id
+  providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '918468008115-54soefsa7a4vcv5os5vbsgmmjhjvlcl0.apps.googleusercontent.com'
+            )
+          },
+        ],
+        onError: (err) => {
+          console.error(err);
         }
-      ]
-    }
-  }]
+      } as SocialAuthServiceConfig,
+    },
+  ],
 })
 export class UserModule { }
