@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { UserService } from '../user.service';
+import { UserService } from '../../shared/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

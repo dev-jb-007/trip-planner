@@ -16,10 +16,8 @@ export class GoogleSigninButtDirective implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.el.nativeElement);
         if (!this.option) return;
         this.socialAuthService.initState.pipe(take(1)).subscribe(() => {
-            console.log(this.el.nativeElement);
             google.accounts.id.renderButton(this.el.nativeElement, {
                 type: 'standard',
                 size: 'medium',

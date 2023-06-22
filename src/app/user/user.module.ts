@@ -15,6 +15,7 @@ import {
   GoogleLoginProvider,
 } from '@abacritt/angularx-social-login';
 import { GoogleSigninButtDirective } from '../directives/google.directive';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { GoogleSigninButtDirective } from '../directives/google.directive';
     MatDialogModule,
     MatSnackBarModule,
     SocialLoginModule,
+    SharedModule
   ],
   exports:[
     LoginComponent,
@@ -58,4 +60,8 @@ import { GoogleSigninButtDirective } from '../directives/google.directive';
     },
   ],
 })
-export class UserModule { }
+export class UserModule {
+  constructor(){
+    console.log("User Module");
+  }
+ }

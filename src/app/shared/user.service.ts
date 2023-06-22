@@ -1,22 +1,13 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Subject,tap } from "rxjs";
+import { BehaviorSubject, Observable,catchError,tap } from "rxjs";
 import { User } from "./user.model";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../../environment/environment.prod";
 import { CookieService } from "ngx-cookie-service";
-import { HeaderComponent } from "../header/header.component";
-
-//Interfaces
-export interface SignUpResponse{
-    email:string
-    name:string
-    token:string
-    error:boolean
-  }
-
-@Injectable({providedIn:'root'})
+import { SignUpResponse } from "../user/models/signup.interface";
+@Injectable()
 export class UserService{
-    user=new BehaviorSubject<User>(null);
+    user:BehaviorSubject<User>=new BehaviorSubject<User>(null);
     constructor(private http:HttpClient,private cookieService:CookieService){}
     login(email:string,password:string){
         return this.http.post<SignUpResponse>(
@@ -50,24 +41,46 @@ export class UserService{
     }
     AutoLogin(){
         let token=localStorage.getItem('token');
-        console.log(token);
-        console.log(localStorage.getItem('type'));
         if(!token) return;
         this.http.get<SignUpResponse>(
             environment.server+"/user/autoLogin",
             {
                 headers:new HttpHeaders().set('authentication',token).set('type',localStorage.getItem('type'))
             }
-        ).subscribe(
-            data=>{
-                let user=new User(data.name,data.email,data.token);
-                console.log(user);
-                this.user.next(user);
-            },
-            err=>{
-                console.log(err);
+        )
+        .subscribe(
+            {
+                next:(data)=>{
+                    if(data.error){
+                        this.user.next(null);
+                        return;
+                    }
+                    let user=new User(data.name,data.email,data.token);
+                    this.user.next(user);
+                    // console.log(user);
+                },
+                error:(err)=>{
+                    // console.log(err);
+                }
             }
         )
+    }
+    AuthCheck(){
+        let token=localStorage.getItem('token');
+        if(!token)
+        { 
+            return new Observable(observer=>{
+                 observer.next(null);
+            })
+        }
+        return this.http.get<SignUpResponse>(
+            environment.server+"/user/autoLogin",
+            {
+                headers:new HttpHeaders().set('authentication',token).set('type',localStorage.getItem('type'))
+            }
+        ).pipe(catchError((err:any)=>{
+            return null;
+        }));
     }
     googleAuth(token){
         return this.http.get<SignUpResponse>(
@@ -82,8 +95,9 @@ export class UserService{
             this.user.next(user);
         }))
     }
-}
-
-function resData(value: Object): void {
-    throw new Error("Function not implemented.");
+    logOut(){
+        localStorage.removeItem('token');
+        localStorage.removeItem('type');
+        this.user.next(null);
+    }
 }

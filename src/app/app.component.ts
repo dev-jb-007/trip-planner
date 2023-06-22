@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from './user/user.service';
+import { UserService } from './shared/user.service';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +7,9 @@ import { UserService } from './user/user.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  constructor(private userService:UserService){}
+  constructor(private userService:UserService){
+
+  }
   title = 'trip-planner';
   ngOnInit(): void {
     this.userService.AutoLogin();

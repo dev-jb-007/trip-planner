@@ -70,22 +70,23 @@ exports.autoLogin=async (req,res,next)=>{
     try{
         let token=req.headers.authentication;
         let type=req.headers.type;
-        if(type=='google'){
-            verify(token).then(async (data)=>{
-                const user=await User.findOne({email:data.email});
-                if(user){
-                    res.status(200).json({
-                        name:user.name,
-                        email:user.email,
-                        token
-                    });
-                }
-                else{
-                    throw new Error('Please Register');
-                }
-            }).catch(err=>{
-                throw new Error('Please Authenticate');
-            });
+        let isError=false;
+        if(!token||!type){
+            throw new Error("Please Authenticate");
+        }
+        if(type==="google"){
+            let response=await verify(token);
+            const user=await User.findOne({email:response.email});
+            if(user){
+                res.status(200).json({
+                    name:user.name,
+                    email:user.email,
+                    token
+                });
+            }
+            else{
+                throw new Error('Please Register');
+            }
         }
         else{
             var base64Payload = token.split(".")[1];
@@ -101,8 +102,12 @@ exports.autoLogin=async (req,res,next)=>{
                 token
             });
         }
+        if(isError==true){
+            throw new Error("Please Authenticate");
+        }
     }
     catch(err){
+        console.log(err);
         err.status=403;
         next(err);
     }

@@ -6,7 +6,7 @@ import { SignupComponent } from './signup/signup.component';
 import { EmailVerificationComponent } from './email-verification/email-verification.component';
 const routes: Routes = [
     {
-        path:'',
+        path:'user',
         component:UserComponent,
         children:[
             {path:"login",component:LoginComponent},
